@@ -59,17 +59,15 @@ with st.sidebar:
 
 
 #Home page
-viz=st.container()
-but=st.container()
 if selected=="Home":
     st.title(":red[Silent Heart]")
     tab1, tab2 = st.tabs(["📊 Dashboard", "📄 Blogs"])
     with tab1:
         st.header("Dashboard")
-        # col1, col2, col3 = st.columns(3)
-        # col1.metric("Deaths last year due to CVD", "70 °F", "1.2 °F")
-        # col2.metric("Wind", "9 mph", "-8%")
-        # col3.metric("Humidity", "86%", "4%")
+        col1, col2, col3 = st.columns(3)
+        col1.metric("People affected by CVD", "620 M", "8 %",delta_color='inverse')
+        col2.metric("Deaths", "20.5 M", "1.2 %",delta_color='inverse')
+        col3.metric("Waiting time for surgery", "7 days", "15 days")
         #Viz1
         @st.cache_data(show_spinner="Loading visuals...")
         def viz1():
@@ -156,7 +154,7 @@ predict = st.container()
 results = st.container()
 if selected=="Prediction":
     with predict:
-        st.title(":red[Heart Disease Prediction]")
+        st.title(":red[Cardiovascular Disease Prediction]")
         st.subheader('Fill out the following:')
         name = st.text_input('Enter your Name')
         st.write('**Demographic and Screening Questions**')
@@ -294,7 +292,7 @@ if selected=="Prediction":
                 FriedPotato_Consumption = fried_month
         
         submit = st.button('Predict',type="primary")
-        st.warning('Disclaimer: **Your data is being collected to enhance our model. We prioritize your privacy and employ strict security measures.**')
+        #st.warning('Disclaimer: **Your data is being collected to enhance our model. We prioritize your privacy and employ strict security measures.**')
     
     
 
@@ -372,9 +370,9 @@ if selected=="Prediction":
 
                 with st.expander("**Recommendation**"):
                     if pred[0]==0:
-                        st.markdown("<ul style='list-style-type:disc;'><li>Maintain a heart-healthy diet rich in fruits, vegetables, whole grains, and lean proteins.</li><li>⁠Engage in regular physical activity or exercise for at least 30 minutes most days of the week.</li><li>Keep up-to-date with current health guidelines to ensure ongoing adherence to heart-healthy habits.</li><li>Regular check-ups can help monitor overall health and detect any potential issues early on.</li></ul>",unsafe_allow_html=True)
+                        st.markdown("<ul style='list-style-type:disc;'><li>Maintain a heart-healthy diet rich in fruits(pomegranate,avacado,berries), vegetables(tomatoes,onions,dioscorea), whole grains, and lean proteins.</li><li>Engage in regular physical activity such as meditation/yoga or exercise for at least 30 minutes most days of the week.</li><li>Keep up-to-date with current health guidelines to ensure ongoing adherence to heart-healthy habits.</li><li>Regular check-ups can help monitor overall health and detect any potential issues early on.</li></ul>",unsafe_allow_html=True)
                     else:
-                        st.markdown("<ul style='list-style-type:disc;'><li>Adhere to prescribed medications and regular medical check-ups.</li><li>Seek professional guidance and support from healthcare providers or nutritionists for personalized preventive strategies.</li><li>⁠Incorporate stress-reducing activities such as meditation into daily routine and ensure adeuate sleep duration</li><li>Avoid smoking and alcohol consumption with immediate effect</li></ul>",unsafe_allow_html=True)
+                        st.markdown("<ul style='list-style-type:disc;'><li>Adhere to prescribed medications and regular medical check-ups.</li><li>Seek professional guidance and support from healthcare providers or nutritionists for personalized preventive strategies.</li><li>⁠Incorporate stress-reducing activities such as meditation into daily routine and ensure adequate sleep duration</li><li>Avoid smoking and alcohol consumption with immediate effect</li><li>⁠Adopt dietary modifications to reduce salt and sugar intake.</li></ul>",unsafe_allow_html=True)
                 
                 st.warning('Disclaimer: **The results from this test are not intended to diagnose or treat any disease, or offer personal medical advice.**\
                         The model was only trained in 300,000 data and with personal attributes only.')
@@ -387,7 +385,6 @@ if selected=="Prediction":
 if selected=="Find a Doctor":
     st.title(":red[Find a Doctor]")
     mapdata=pd.read_excel("Cardiologist_List.xlsx")
-    #loccols=['lat','lng']
     state=st.selectbox("Choose your State",mapdata['State'].unique(),index=None,placeholder="State")
     if state!=None:
         mapdata['Check']=False
@@ -400,7 +397,7 @@ if selected=="Find a Doctor":
         contains_true = check['Check'].any()
         if contains_true:
             fig =scatter_mapbox(check, lat="lat", lon="lng", hover_name="City", hover_data=["Address"],
-                                    color_discrete_sequence=["red"], zoom=10)
+                                    color_discrete_sequence=["red"], zoom=12)
             fig.update_layout(mapbox_style="open-street-map")
             fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
         else:
