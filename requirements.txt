@@ -1,0 +1,11 @@
+streamlit
+pandas
+joblib
+streamlit_lottie
+streamlit_option_menu
+plotly.express
+json
+sklearn.preprocessing
+datetime
+fpdf
+streamlit_gsheets

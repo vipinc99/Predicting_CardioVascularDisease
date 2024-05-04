@@ -1,12 +1,14 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 from joblib import load
 from streamlit_lottie import st_lottie
 from streamlit_option_menu import option_menu
 from plotly.express import histogram,box,sunburst,scatter_mapbox
 import json
 from sklearn.preprocessing import OrdinalEncoder
+from datetime import datetime
+from fpdf import FPDF
+from streamlit_gsheets import GSheetsConnection
 
 #Layout
 st.set_page_config(
@@ -34,7 +36,14 @@ def load_data(url):
 
 final_model = model('model.joblib')
 odf = load_data("CVD_cleaned.csv")
-#datao=odf.copy()   
+
+#Gsheets connection
+conn = st.connection("gsheets", type=GSheetsConnection)
+existing_data = conn.read(worksheet="Record",usecols=list(range(20)),ttl="10m")
+existing_data=existing_data.dropna(how="all")
+existing_data_validation=conn.read(worksheet="Validation",usecols=list(range(5)),ttl="10m")
+existing_data_validation=existing_data_validation.dropna(how="all")
+
 # # Hide the github icon on the right side in the deployed app
 # hide_github_icon = """
 #     <style>
@@ -61,13 +70,14 @@ with st.sidebar:
 #Home page
 if selected=="Home":
     st.title(":red[Silent Heart]")
-    tab1, tab2 = st.tabs(["📊 Dashboard", "📄 Blogs"])
+    tab1, tab2, tab3 = st.tabs(["📊 Dashboard", "📑 Blogs","📹 Videos"])
     with tab1:
+        #Dashboard section
         st.header("Dashboard")
         col1, col2, col3 = st.columns(3)
         col1.metric("People affected by CVD", "620 M", "8 %",delta_color='inverse')
         col2.metric("Deaths", "20.5 M", "1.2 %",delta_color='inverse')
-        col3.metric("Waiting time for surgery", "7 days", "15 days")
+        col3.metric("Waiting time for surgery", "7 days", "- 8 days",delta_color='inverse')
         #Viz1
         @st.cache_data(show_spinner="Loading visuals...")
         def viz1():
@@ -78,7 +88,7 @@ if selected=="Home":
                      "Heart_Disease": "Heart Disease"
                                     },
                             category_orders={"Smoking_History": ["Yes", "No"]}) 
-            st.plotly_chart(viz1,theme="streamlit")
+            st.plotly_chart(viz1,theme="streamlit",use_container_width=True)
         
         viz1()
 
@@ -96,7 +106,7 @@ if selected=="Home":
                                     },
                     title="BMI Distribution across Alcohol Consumption on Heart Disease Status",
                     category_orders={"Alcohol_Consumption": ["Yes", "No"]})
-            st.plotly_chart(viz2,theme="streamlit")
+            st.plotly_chart(viz2,theme="streamlit",use_container_width=True)
 
         viz2()
 
@@ -107,7 +117,7 @@ if selected=="Home":
             viz3 = sunburst(odf, path=['Sex','Heart_Disease' ,'Age_Category'],values='Alcohol_Consumption', color='Alcohol_Consumption',labels={
                      "Alcohol_Consumption": "Alcohol Consumption"
                                     },title='Analysis of Sex, Age category and the presence of Heart disease')
-            st.plotly_chart(viz3,theme="streamlit")
+            st.plotly_chart(viz3,theme="streamlit",use_container_width=True)
         
         viz3()
 
@@ -116,7 +126,7 @@ if selected=="Home":
         def viz4():
             viz4 = histogram(odf, x="BMI", color="Heart_Disease",
                             labels={"Heart_Disease":"Heart Disease"},title="BMI vs Heart Disease",nbins=30)
-            st.plotly_chart(viz4,theme="streamlit")
+            st.plotly_chart(viz4,theme="streamlit",use_container_width=True)
         
         viz4()
 
@@ -148,6 +158,25 @@ if selected=="Home":
                 st.markdown("<div style='text-align: justify;'>Various exercises, including brisk walking, running, cycling, strength training, yoga, and high-intensity interval training (HIIT), are scientifically proven to enhance heart health. Incorporate a mix of these activities into your routine for optimal cardiovascular benefits.</div>", unsafe_allow_html=True)
                 st.markdown( """<a style='display: block; text-align: center;' href="https://www.goodrx.com/well-being/movement-exercise/exercises-to-improve-heart-health">Read the full blog</a>""",unsafe_allow_html=True)
     
+    with tab3:
+        #Video section
+        st.header("Videos")
+        col1,col2=st.columns(2,gap="medium")
+        with col1:
+            with st.container(border=True):
+                st.video("https://youtu.be/h413NHcx7eo?si=k7GYfGGm7nCQn3lu")
+        with col2:
+            with st.container(border=True):
+                st.video("https://youtu.be/g131j2lb3xw?si=TmTONNrRnYOkKfP7")
+        
+        col1,col2=st.columns(2,gap="medium")
+        with col1:
+            with st.container(border=True):
+                st.video("https://youtu.be/_ePLBIDlChA?si=E_27Mo-D2lT9Aogm")
+        with col2:
+            with st.container(border=True):
+                st.video("https://youtu.be/J1DUQFL-VHw?si=BLIl07CZXet14zvW")
+
 
 #Prediction Page
 predict = st.container()
@@ -291,16 +320,30 @@ if selected=="Prediction":
             if fried_month != 'How many times do you eat Fried Potatoes per month?':
                 FriedPotato_Consumption = fried_month
         
-        submit = st.button('Predict',type="primary")
-        #st.warning('Disclaimer: **Your data is being collected to enhance our model. We prioritize your privacy and employ strict security measures.**')
+        col1, col2, col3 , col4, col5 = st.columns(5)
+        with col1:
+            pass
+        with col2:
+            pass
+        with col4:
+            pass
+        with col5:
+            pass
+        with col3 :
+            submit = st.button('Predict',type="primary")
+        
+        st.warning('Disclaimer: **Your data is being collected to enhance our model. We prioritize your privacy and employ strict security measures.The results from this test are not intended to diagnose or treat any disease.**')
     
     
 
     with results:
-        if submit:
+        if "load_state" not in st.session_state:
+            st.session_state.load_state=False
+        
+        if submit or st.session_state.load_state:
+            st.session_state.load_state=True
             try:
-                bmi = Weight_kg / (Height_cm/100)**2
-
+                bmi = round(Weight_kg / (Height_cm/100)**2,2)
                 new_input = [General_Health,Checkup,Exercise,Skin_Cancer,
                             Other_Cancer,Depression,Diabetes,Arthritis,
                             Sex,Age_Category,Height_cm,Weight_kg,bmi,
@@ -308,7 +351,6 @@ if selected=="Prediction":
                             Green_Vegetables_Consumption,FriedPotato_Consumption
                 ]
                 df = pd.DataFrame([new_input])
-
                 df.columns = ['General_Health',
                 'Checkup',
                 'Exercise',
@@ -327,7 +369,8 @@ if selected=="Prediction":
                 'Fruit_Consumption',
                 'Green_Vegetables_Consumption',
                 'FriedPotato_Consumption']
-                #copy_df=df.copy()
+                copy_df=df.copy()
+                copy_df.insert(0, 'Name', [name])
                 test_dict={'General_Health': ['Poor', 'Very Good', 'Good', 'Fair', 'Excellent'], 'Checkup': ['Within the past 2 years', 'Within the past year', '5 or more years ago', 'Within the past 5 years', 'Never'], 'Exercise': ['No', 'Yes'], 'Skin_Cancer': ['No', 'Yes'], 'Other_Cancer': ['No', 'Yes'], 'Depression': ['No', 'Yes'], 'Diabetes': ['No', 'Yes', 'No, pre-diabetes or borderline diabetes', 'Yes, but female told only during pregnancy'], 'Arthritis': ['Yes', 'No'], 'Sex': ['Female', 'Male'], 'Age_Category': ['70-74', '60-64', '75-79', '80+', '65-69', '50-54', '45-49', '18-24', '30-34', '55-59', '35-39', '40-44', '25-29'], 'Smoking_History': ['Yes', 'No']}
                 categorical = df.select_dtypes(include=['object']).columns
                 l=[]
@@ -342,17 +385,18 @@ if selected=="Prediction":
                 st.write('Based from the Machine Learning model, your risk of developing Cardiovascular Disease (CVD) is:')
 
                 if pred[0] == 0: 
-                    st.balloons()    
+                    #st.balloons()    
                     risk = 'LOW'
-                    #copy_df['Heart_Disease']="No"
+                    copy_df['Heart_Disease']="No"
                     st.success(f'**{risk}**')
                 else:
                     risk = 'HIGH'
-                    #copy_df['Heart_Disease']="Yes"
+                    copy_df['Heart_Disease']="Yes"
                     st.error(f'**{risk}**')
                 
-                # datao=pd.concat([datao, copy_df], ignore_index=True)
-                # datao.to_csv("CVD_cleaned.csv",index=False)
+                updated_df=pd.concat([existing_data,copy_df],ignore_index=True)
+                conn.update(worksheet="Record",data=updated_df)
+
                 cnum=['Alcohol_Consumption','Fruit_Consumption','Green_Vegetables_Consumption','FriedPotato_Consumption']
                 mean_values =odf[cnum].mean()
                 with st.expander("**Detailed information**"):
@@ -374,11 +418,89 @@ if selected=="Prediction":
                     else:
                         st.markdown("<ul style='list-style-type:disc;'><li>Adhere to prescribed medications and regular medical check-ups.</li><li>Seek professional guidance and support from healthcare providers or nutritionists for personalized preventive strategies.</li><li>⁠Incorporate stress-reducing activities such as meditation into daily routine and ensure adequate sleep duration</li><li>Avoid smoking and alcohol consumption with immediate effect</li><li>⁠Adopt dietary modifications to reduce salt and sugar intake.</li></ul>",unsafe_allow_html=True)
                 
-                st.warning('Disclaimer: **The results from this test are not intended to diagnose or treat any disease, or offer personal medical advice.**\
-                        The model was only trained in 300,000 data and with personal attributes only.')
-                        
+
+                #CSV download        
+                @st.cache_data
+                def convert_df(df):
+                    return df.to_csv(index=False).encode("utf-8")
+
+                csv = convert_df(copy_df)
+                current_date = datetime.now().strftime("%d-%b-%y %H:%M")
+                #current_date = datetime.now()
+               
+                #PDF download
+                content_str = f"""
+                            Name:{name}\n
+                            Sex:{Sex}\n
+                            Age Category:{Age_Category}\n
+                            Height(cm):{Height_cm}\n
+                            Weight(kg):{Weight_kg}\n
+                            BMI:{bmi}\n
+                            General Health:{General_Health}\n
+                            Checkup:{Checkup}\n
+                            Smoking history:{Smoking_History}\n
+                            Skin Cancer:{Skin_Cancer}\n
+                            Other Cancer:{Other_Cancer}\n
+                            Depression:{Depression}\n
+                            Diabetes:{Diabetes}\n
+                            Arthritis:{Arthritis}\n
+                            Data in the past one month(30 days):\n
+                            Exercise:{Exercise}\n
+                            Alcohol Consumption:{Alcohol_Consumption}\n
+                            Fruit Consumption:{Fruit_Consumption}\n
+                            Green Vegetables Consumption:{Green_Vegetables_Consumption}\n
+                            Fried Potato Consumption:{FriedPotato_Consumption}\n\n
+                            The risk of developing Cardiovascular Disease (CVD) is:{risk}
+                            """
+
+                pdf = FPDF()
+                pdf.add_page()
+                pdf.set_font("Arial",size=18,style="B")
+                pdf.cell(0, 10, txt="Health Record", ln=1,align="C")
+                pdf.set_font("Arial", size=15)
+                pdf.multi_cell(0, 5, txt=content_str,align="L")
+                pdf_file = pdf.output(dest="S").encode("latin-1")
+                
+                st.subheader("User Record")
+                st.download_button(
+                        label="Download PDF",
+                        data=pdf_file,
+                        file_name=f"{name} details:{current_date}.pdf",
+                        mime="application/pdf",
+                        type="primary"
+                    )
+                st.download_button(
+                        label="Download CSV",
+                        data=csv,
+                        file_name=f"{name} details:{current_date}.csv",
+                        mime="text/csv",
+                        type="primary"
+                        )
+                
+
+                with st.expander("**Doctor's Validation (To be filled by a medical practitioner only)**"):
+                    doctorname=st.text_input("Enter Doctor's Name")
+                    doctoropinion = st.radio('What is the risk of patient developing Cardiovascular Disease (CVD)?',
+                                    ('LOW','HIGH'),horizontal=True,index=None)
+                    if doctoropinion!=None and doctorname!=None:
+                        if risk==doctoropinion:
+                            validation="Correct"
+                        else:
+                            validation="Wrong"
+
+                        validationdata = {'Patient Name': [name],
+                                'Model output': [risk],
+                                'Doctor output': [doctoropinion],
+                                'Validation':[validation],
+                                'Doctor Name':[doctorname]
+                                }
+                        validationdf=pd.DataFrame(validationdata)
+                        updated_validation_df=pd.concat([existing_data_validation,validationdf],ignore_index=True)
+                        conn.update(worksheet="Validation",data=updated_validation_df)
+                        st.success(f"Thank you Dr.{doctorname} for validating our model!")      
+                         
             except:
-                st.error('Enter valid values to show the results')
+                st.error("Please enter valid values")
 
 
 #Find a doctor page
