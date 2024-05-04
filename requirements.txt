@@ -4,7 +4,7 @@ joblib
 streamlit_lottie
 streamlit_option_menu
 plotly.express
-sklearn.preprocessing
+scikit-learn
 datetime
 fpdf
 st-gsheets-connection
