@@ -425,7 +425,7 @@ if selected=="Prediction":
                     return df.to_csv(index=False).encode("utf-8")
 
                 csv = convert_df(copy_df)
-                current_date = datetime.now().strftime("%d-%b-%y %H:%M")
+                current_date = datetime.now().strftime("%d-%b-%y")
                 #current_date = datetime.now()
                
                 #PDF download
