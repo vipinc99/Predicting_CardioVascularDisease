@@ -9,3 +9,4 @@ datetime
 fpdf
 st-gsheets-connection
 xgboost
+openpyxl
