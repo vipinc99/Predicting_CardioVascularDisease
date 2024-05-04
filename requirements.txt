@@ -8,3 +8,4 @@ scikit-learn
 datetime
 fpdf
 st-gsheets-connection
+xgboost
