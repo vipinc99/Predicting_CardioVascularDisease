@@ -15,7 +15,7 @@ st.set_page_config(
     page_title="Silent Heart",
     layout="wide",
     page_icon="logo.jpg",
-    initial_sidebar_state="expanded")
+    initial_sidebar_state="auto")
 
 
 @st.cache_data
