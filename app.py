@@ -39,9 +39,9 @@ odf = load_data("CVD_cleaned.csv")
 
 #Gsheets connection
 conn = st.connection("gsheets", type=GSheetsConnection)
-existing_data = conn.read(worksheet="Record",usecols=list(range(20)),ttl="10m")
+existing_data = conn.read(worksheet="Record",usecols=list(range(20)),ttl="5m")
 existing_data=existing_data.dropna(how="all")
-existing_data_validation=conn.read(worksheet="Validation",usecols=list(range(5)),ttl="10m")
+existing_data_validation=conn.read(worksheet="Validation",usecols=list(range(5)),ttl="5m")
 existing_data_validation=existing_data_validation.dropna(how="all")
 
 # # Hide the github icon on the right side in the deployed app
