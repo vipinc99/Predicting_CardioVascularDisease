@@ -1,9 +1,0 @@
-from scipy.stats import binom
-
-# Parameters for Choice 1
-n = 10
-p = 0.25
-
-# Calculate probability of passing P(X >= 6)
-P_X_geq_6 = sum(binom.pmf(k, n, p) for k in range(6, 11))
-print(P_X_geq_6)
