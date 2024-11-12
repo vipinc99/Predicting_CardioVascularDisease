@@ -137,24 +137,24 @@ if selected=="Home":
         col1,col2=st.columns(2,gap="medium")
         with col1:
             with st.expander("**How to improve heart health at any age?**",expanded=True):
-                st.image("blog1.jpg",use_column_width='always')
+                st.image("blog1.jpg",use_container_width=True)
                 st.markdown("<div style='text-align: justify;'>Dr. Leana Wen advocates early health habits: prioritize exercise, nutrition, and substance awareness from teens. Aim for 150 weekly minutes of enjoyable exercise, embrace whole foods, and avoid smoking for heart health.</div>", unsafe_allow_html=True)
                 st.markdown( """<a style='display: block; text-align: center;' href="https://edition.cnn.com/2024/02/02/health/improve-heart-health-wellness/index.html">Read the full blog</a>""",unsafe_allow_html=True)
         with col2:
             with st.expander("**How can heart disease be prevented?**",expanded=True):
-                st.image("blog2.jpg",use_column_width='always')
+                st.image("blog2.jpg",use_container_width=True)
                 st.markdown("<div style='text-align: justify;'>Prevent heart disease by avoiding tobacco, limiting alcohol, eating heart-healthy foods, and managing cholesterol levels. Lifestyle changes and medications can significantly reduce risks and promote heart health.</div>", unsafe_allow_html=True)
                 st.markdown( """<a style='display: block; text-align: center;' href="https://my.clevelandclinic.org/health/articles/17385-heart-disease-prevention-and-reversal">Read the full blog</a>""",unsafe_allow_html=True)
             
         col1,col2=st.columns(2,gap="medium")
         with col1:
             with st.expander("**How does smoking and drinking harm your health?**",expanded=True):
-                st.image("blog3.jpg",use_column_width='always')
+                st.image("blog3.jpg",use_container_width=True)
                 st.markdown("<div style='text-align: justify;'>The coexistence of smoking and drinking poses significant health risks, often intertwined as a lifestyle choice. Their combined impact can be severe and potentially fatal if frequent. It's crucial to understand and address the associated health hazards.</div>", unsafe_allow_html=True)
                 st.markdown( """<a style='display: block; text-align: center;' href="https://shorturl.at/ginH5">Read the full blog</a>""",unsafe_allow_html=True)
         with col2:
             with st.expander("**6 Exercises to improve heart health**",expanded=True):
-                st.image("blog4.jpg",use_column_width='always')
+                st.image("blog4.jpg",use_container_width=True)
                 st.markdown("<div style='text-align: justify;'>Various exercises, including brisk walking, running, cycling, strength training, yoga, and high-intensity interval training (HIIT), are scientifically proven to enhance heart health. Incorporate a mix of these activities into your routine for optimal cardiovascular benefits.</div>", unsafe_allow_html=True)
                 st.markdown( """<a style='display: block; text-align: center;' href="https://www.goodrx.com/well-being/movement-exercise/exercises-to-improve-heart-health">Read the full blog</a>""",unsafe_allow_html=True)
     
