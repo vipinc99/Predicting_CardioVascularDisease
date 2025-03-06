@@ -88,7 +88,7 @@ if selected=="Home":
                      "Heart_Disease": "Heart Disease"
                                     },
                             category_orders={"Smoking_History": ["Yes", "No"]}) 
-            st.plotly_chart(viz1,theme="streamlit",use_container_width=True)
+            st.plotly_chart(viz1,theme="streamlit",use_column_width=True)
         
         viz1()
 
@@ -106,7 +106,7 @@ if selected=="Home":
                                     },
                     title="BMI Distribution across Alcohol Consumption on Heart Disease Status",
                     category_orders={"Alcohol_Consumption": ["Yes", "No"]})
-            st.plotly_chart(viz2,theme="streamlit",use_container_width=True)
+            st.plotly_chart(viz2,theme="streamlit",use_column_width=True)
 
         viz2()
 
@@ -117,7 +117,7 @@ if selected=="Home":
             viz3 = sunburst(odf, path=['Sex','Heart_Disease' ,'Age_Category'],values='Alcohol_Consumption', color='Alcohol_Consumption',labels={
                      "Alcohol_Consumption": "Alcohol Consumption"
                                     },title='Analysis of Sex, Age category and the presence of Heart disease')
-            st.plotly_chart(viz3,theme="streamlit",use_container_width=True)
+            st.plotly_chart(viz3,theme="streamlit",use_column_width=True)
         
         viz3()
 
@@ -126,7 +126,7 @@ if selected=="Home":
         def viz4():
             viz4 = histogram(odf, x="BMI", color="Heart_Disease",
                             labels={"Heart_Disease":"Heart Disease"},title="BMI vs Heart Disease",nbins=30)
-            st.plotly_chart(viz4,theme="streamlit",use_container_width=True)
+            st.plotly_chart(viz4,theme="streamlit",use_column_width=True)
         
         viz4()
 
@@ -137,24 +137,24 @@ if selected=="Home":
         col1,col2=st.columns(2,gap="medium")
         with col1:
             with st.expander("**How to improve heart health at any age?**",expanded=True):
-                st.image("blog1.jpg",use_container_width=True)
+                st.image("blog1.jpg",use_column_width=True)
                 st.markdown("<div style='text-align: justify;'>Dr. Leana Wen advocates early health habits: prioritize exercise, nutrition, and substance awareness from teens. Aim for 150 weekly minutes of enjoyable exercise, embrace whole foods, and avoid smoking for heart health.</div>", unsafe_allow_html=True)
                 st.markdown( """<a style='display: block; text-align: center;' href="https://edition.cnn.com/2024/02/02/health/improve-heart-health-wellness/index.html">Read the full blog</a>""",unsafe_allow_html=True)
         with col2:
             with st.expander("**How can heart disease be prevented?**",expanded=True):
-                st.image("blog2.jpg",use_container_width=True)
+                st.image("blog2.jpg",use_column_width=True)
                 st.markdown("<div style='text-align: justify;'>Prevent heart disease by avoiding tobacco, limiting alcohol, eating heart-healthy foods, and managing cholesterol levels. Lifestyle changes and medications can significantly reduce risks and promote heart health.</div>", unsafe_allow_html=True)
                 st.markdown( """<a style='display: block; text-align: center;' href="https://my.clevelandclinic.org/health/articles/17385-heart-disease-prevention-and-reversal">Read the full blog</a>""",unsafe_allow_html=True)
             
         col1,col2=st.columns(2,gap="medium")
         with col1:
             with st.expander("**How does smoking and drinking harm your health?**",expanded=True):
-                st.image("blog3.jpg",use_container_width=True)
+                st.image("blog3.jpg",use_column_width=True)
                 st.markdown("<div style='text-align: justify;'>The coexistence of smoking and drinking poses significant health risks, often intertwined as a lifestyle choice. Their combined impact can be severe and potentially fatal if frequent. It's crucial to understand and address the associated health hazards.</div>", unsafe_allow_html=True)
                 st.markdown( """<a style='display: block; text-align: center;' href="https://shorturl.at/ginH5">Read the full blog</a>""",unsafe_allow_html=True)
         with col2:
             with st.expander("**6 Exercises to improve heart health**",expanded=True):
-                st.image("blog4.jpg",use_container_width=True)
+                st.image("blog4.jpg",use_column_width=True)
                 st.markdown("<div style='text-align: justify;'>Various exercises, including brisk walking, running, cycling, strength training, yoga, and high-intensity interval training (HIIT), are scientifically proven to enhance heart health. Incorporate a mix of these activities into your routine for optimal cardiovascular benefits.</div>", unsafe_allow_html=True)
                 st.markdown( """<a style='display: block; text-align: center;' href="https://www.goodrx.com/well-being/movement-exercise/exercises-to-improve-heart-health">Read the full blog</a>""",unsafe_allow_html=True)
     
@@ -527,7 +527,7 @@ if selected=="Find a Doctor":
                                     color_discrete_sequence=["red"], zoom=6)
             fig.update_layout(mapbox_style="open-street-map")
             fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-        st.plotly_chart(fig,use_container_width=True)
+        st.plotly_chart(fig,use_column_width=True)
         with st.expander("**Doctors across India**"):
             st.cache_data(show_spinner="Loading map...")
             def loadmap():
@@ -535,7 +535,7 @@ if selected=="Find a Doctor":
                                         color_discrete_sequence=["red"], zoom=4)
                 fig2.update_layout(mapbox_style="open-street-map")
                 fig2.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-                st.plotly_chart(fig2,use_container_width=True)
+                st.plotly_chart(fig2,use_column_width=True)
 
             loadmap()
 
